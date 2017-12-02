@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Codility tasks</title>
+    <style>
+        .task-list {
+            display: inline-block;
+            float: left;
+            width: 200px;
+            min-height: 90vh;
+            background: #e0e0e0;
+            padding: 10px;
+            margin-right: 20px;
+        }
+
+        .task-link {
+            display: block;
+            padding: 2px;
+            text-decoration: none;
+        }
+
+        .task-link:active {
+            text-decoration: underline;
+        }
+
+        #task-code {
+            width: calc(100% - 250px);
+            height: 50vh;
+        }
+    </style>
+</head>
+<body>
+
+<div class="task-list">
+    <a class="task-link" href="fibonacci">Fibonacci</a>
+    <a class="task-link" href="binary-gap">Binary Gap</a>
+</div>
+
+<iframe id="task-code" src=""></iframe>
+<input type="text" id="task-value" placeholder="Test value"/>
+<div id="task-result"></div>
+
+<script>
+    var helper = {
+        valueElem: document.getElementById('task-value'),
+        resultElem: document.getElementById('task-result'),
+        codeElem: document.getElementById('task-code'),
+        linkElems: document.querySelectorAll('.task-link'),
+        timers    : {},
+
+        log    : function (msg) {
+            var line       = document.createElement('div');
+            line.innerHTML = msg;
+            this.resultElem.appendChild(line);
+        },
+
+        time   : function (timer) {
+            this.timers[timer || 'default'] = (new Date());
+        },
+
+        timeEnd: function (timer) {
+            this.log((new Date()) - this.timers[timer || 'default']);
+        },
+
+        clear  : function () {
+            this.resultElem.innerHTML = '';
+        },
+
+        getTestValue: function () {
+            return this.valueElem.value || 0;
+        }
+    };
+
+    Object.freeze(helper);
+
+    Array.from(helper.linkElems).forEach(function (link) {
+        link.addEventListener('click', callTaskScript);
+    });
+
+    // add new task
+    var currentTaskScript;
+    function addTaskScript(src) {
+        if (currentTaskScript) {
+            currentTaskScript.parentNode.removeChild(currentTaskScript);
+        }
+
+        currentTaskScript = document.createElement('script')
+        currentTaskScript.setAttribute('src', src);
+        currentTaskScript.addEventListener('load', runTaskScript);
+        document.head.appendChild(currentTaskScript);
+        helper.codeElem.setAttribute('src', src);
+
+        return currentTaskScript;
+    }
+
+    // start task
+    function runTaskScript() {
+        helper.clear();
+        main();
+    }
+
+    // link click
+    function callTaskScript(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        addTaskScript('tasks/' + this.getAttribute('href') + '.js');
+
+        return true;
+    }
+</script>
+</body>
+</html>
