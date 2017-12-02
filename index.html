@@ -35,6 +35,7 @@
 <div class="task-list">
     <a class="task-link" href="fibonacci">Fibonacci</a>
     <a class="task-link" href="binary-gap">Binary Gap</a>
+    <a class="task-link" href="odd-occurrences-in-array">Odd occurrences in array</a>
 </div>
 
 <iframe id="task-code" src=""></iframe>
@@ -46,22 +47,22 @@
     (function (window) {
 
         var helper = {
-            valueElem: document.getElementById('task-value'),
-            loopsElem: document.getElementById('task-loops'),
+            valueElem : document.getElementById('task-value'),
+            loopsElem : document.getElementById('task-loops'),
             resultElem: document.getElementById('task-result'),
-            codeElem: document.getElementById('task-code'),
-            linkElems: document.querySelectorAll('.task-link'),
+            codeElem  : document.getElementById('task-code'),
+            linkElems : document.querySelectorAll('.task-link'),
             timers    : {
-                'default':null
+                'default': null
             },
 
-            log    : function (msg) {
+            log: function (msg) {
                 var line       = document.createElement('div');
                 line.innerHTML = msg;
                 this.resultElem.appendChild(line);
             },
 
-            time   : function (timer) {
+            time: function (timer) {
                 this.timers[timer || 'default'] = (new Date());
             },
 
@@ -69,12 +70,14 @@
                 return (new Date()) - this.timers[timer || 'default'];
             },
 
-            clear  : function () {
+            clear: function () {
                 this.resultElem.innerHTML = '';
             },
 
-            getTestValue: function () {
-                return this.valueElem.value || 0;
+            getTestValue: function (defaultValue) {
+                var value = this.valueElem.value;
+
+                return (value !== '') ? JSON.parse(value) : (defaultValue || 0);
             },
 
             getTestLoopsCount: function () {
@@ -90,6 +93,7 @@
 
         // add new task
         var currentTaskScript;
+
         function addTaskScript(src) {
             if (currentTaskScript) {
                 currentTaskScript.parentNode.removeChild(currentTaskScript);
@@ -125,16 +129,16 @@
 
             helper.log('&nbsp;');
 
-            if(title)helper.log(title);
-            if(!repeatNo)repeatNo = helper.getTestLoopsCount();
+            if (title) helper.log(title);
+            if (!repeatNo) repeatNo = helper.getTestLoopsCount();
 
             helper.time();
-            for(var i=0; i < repeatNo; i++){
+            for (var i = 0; i < repeatNo; i++) {
                 result = callback();
             }
             helper.log('Execution time: ' + helper.timeEnd());
 
-            if(result)helper.log('Result: ' + result);
+            if (result) helper.log('Result: ' + result);
         };
 
         Object.assign(exportHelper, helper);
