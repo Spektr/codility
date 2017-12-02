@@ -29,10 +29,10 @@ function main(){
     helper.log('fibonacci old');
     helper.time();
     yourself.fibonacci(testNumber);
-    helper.timeEnd();
+    helper.log(helper.timeEnd());
 
     helper.log('fibonacci new');
     helper.time();
     yourselfNew.fibonacci(testNumber);
-    helper.timeEnd();
+    helper.log(helper.timeEnd());
 }
