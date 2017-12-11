@@ -10,10 +10,10 @@ function main() {
         return ((distance/D) | 0) + (distance % D ? 1 : 0);
     }
 
-    var testNumbers = +helper.getTestValue(),
-        X = testNumbers[0] | 10,
-        Y = testNumbers[0] | 85,
-        D = testNumbers[0] | 30;
+    var testNumbers = helper.getTestValue([10,85,30]),
+        X = testNumbers[0],
+        Y = testNumbers[1],
+        D = testNumbers[2];
 
 
     helper(function () {
