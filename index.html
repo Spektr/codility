@@ -33,12 +33,12 @@
 <body>
 
 <div class="task-list">
-    <a class="task-link" href="fibonacci">Fibonacci</a>
-    <a class="task-link" href="binary-gap">Binary Gap</a>
-    <a class="task-link" href="odd-occurrences-in-array">Odd occurrences in array</a>
-    <a class="task-link" href="ciclic-rotation">Ciclic rotation</a>
-    <a class="task-link" href="frog-jmp">Frog jump</a>
-    <a class="task-link" href="perm-missing-elem">perm-missing-elem</a>
+    <a class="task-link" href="fibonacci"></a>
+    <a class="task-link" href="binary-gap"></a>
+    <a class="task-link" href="odd-occurrences-in-array"></a>
+    <a class="task-link" href="ciclic-rotation"></a>
+    <a class="task-link" href="frog-jmp"></a>
+    <a class="task-link" href="perm-missing-elem"></a>
 </div>
 
 <iframe id="task-code" src=""></iframe>
@@ -50,53 +50,80 @@
     (function (window) {
 
         var helper = {
-            valueElem : document.getElementById('task-value'),
-            loopsElem : document.getElementById('task-loops'),
-            resultElem: document.getElementById('task-result'),
-            codeElem  : document.getElementById('task-code'),
-            linkElems : document.querySelectorAll('.task-link'),
-            timers    : {
-                'default': null
+                valueElem : document.getElementById('task-value'),
+                loopsElem : document.getElementById('task-loops'),
+                resultElem: document.getElementById('task-result'),
+                codeElem  : document.getElementById('task-code'),
+                linkElems : document.querySelectorAll('.task-link'),
+                timers    : {
+                    'default': null
+                },
+
+                log: function (msg) {
+                    var line       = document.createElement('div');
+                    line.innerHTML = msg;
+                    this.resultElem.appendChild(line);
+                },
+
+                time: function (timer) {
+                    this.timers[timer || 'default'] = (new Date());
+                },
+
+                timeEnd: function (timer) {
+                    return (new Date()) - this.timers[timer || 'default'];
+                },
+
+                clear: function () {
+                    this.resultElem.innerHTML = '';
+                },
+
+                clearParams: function () {
+                    this.loopsElem.value = null;
+                    this.valueElem.value = null;
+                },
+
+                getTestValue: function (defaultValue) {
+                    var value = this.valueElem.value;
+
+                    return (value !== '') ? JSON.parse(value) : (defaultValue || 0);
+                },
+
+                getTestLoopsCount: function () {
+                    return +this.loopsElem.value || 1;
+                }
             },
 
-            log: function (msg) {
-                var line       = document.createElement('div');
-                line.innerHTML = msg;
-                this.resultElem.appendChild(line);
-            },
+            exportHelper = function (callback, title, repeatNo) {
+                var result;
 
-            time: function (timer) {
-                this.timers[timer || 'default'] = (new Date());
-            },
+                helper.log('&nbsp;');
 
-            timeEnd: function (timer) {
-                return (new Date()) - this.timers[timer || 'default'];
-            },
+                if (title) helper.log(title);
+                if (!repeatNo) repeatNo = helper.getTestLoopsCount();
 
-            clear: function () {
-                this.resultElem.innerHTML = '';
-            },
+                helper.time();
+                for (var i = 0; i < repeatNo; i++) {
+                    result = callback();
+                }
+                helper.log('Execution time: ' + helper.timeEnd());
 
-            getTestValue: function (defaultValue) {
-                var value = this.valueElem.value;
-
-                return (value !== '') ? JSON.parse(value) : (defaultValue || 0);
-            },
-
-            getTestLoopsCount: function () {
-                return +this.loopsElem.value || 1;
-            }
-        };
+                if (result) helper.log('Result: ' + result);
+            };
 
         Object.freeze(helper);
+        Object.assign(exportHelper, helper);
 
         Array.from(helper.linkElems).forEach(function (link) {
             link.addEventListener('click', callTaskScript);
+            link.innerHTML = link.getAttribute('href');
         });
 
-        // add new task
-        var currentTaskScript;
+        helper.valueElem.addEventListener('keyup', restartTaskScript);
+        helper.loopsElem.addEventListener('keyup', restartTaskScript);
 
+        // add new task
+        var currentTaskScript,
+            restartTimer;
         function addTaskScript(src) {
             if (currentTaskScript) {
                 currentTaskScript.parentNode.removeChild(currentTaskScript);
@@ -111,6 +138,14 @@
             return currentTaskScript;
         }
 
+        function restartTaskScript() {
+            window.clearTimeout(restartTimer);
+
+            restartTimer = window.setTimeout(function () {
+                addTaskScript(currentTaskScript.getAttribute('src'));
+            }, 500);
+        }
+
         // start task
         function runTaskScript() {
             helper.clear();
@@ -122,31 +157,12 @@
             event.preventDefault();
             event.stopPropagation();
 
+            helper.clearParams();
             addTaskScript('tasks/' + this.getAttribute('href') + '.js');
-
             return true;
         }
 
-        var exportHelper = function (callback, title, repeatNo) {
-            var result;
-
-            helper.log('&nbsp;');
-
-            if (title) helper.log(title);
-            if (!repeatNo) repeatNo = helper.getTestLoopsCount();
-
-            helper.time();
-            for (var i = 0; i < repeatNo; i++) {
-                result = callback();
-            }
-            helper.log('Execution time: ' + helper.timeEnd());
-
-            if (result) helper.log('Result: ' + result);
-        };
-
-        Object.assign(exportHelper, helper);
         window.helper = exportHelper;
-
     })(window);
 </script>
 </body>
