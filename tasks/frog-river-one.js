@@ -46,6 +46,21 @@ function main() {
         return -1;
     }
 
+    // 50% perf
+    function solutionThird(X, A) {
+
+        var set = new Set(),
+            len = A.length,
+            i = 0;
+
+        for(;i<len;i++) {
+            set.add(A[i]);
+            if(set.size === X){
+                return i;
+            }
+        }
+    }
+
     var testNumbers = helper.getTestValue([5, [1, 3, 1, 4, 2, 3, 5, 4]]),
         X = testNumbers[0],
         A = testNumbers[1];
@@ -58,6 +73,10 @@ function main() {
     helper(function () {
         return solutionSecond(X,A);
     }, 'frog river one second');
+
+    helper(function () {
+        return solutionThird(X,A);
+    }, 'frog river one ES6');
 }
 
 
