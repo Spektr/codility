@@ -33,6 +33,8 @@
 <body>
 
 <div class="task-list">
+    <a class="task-link" href="cci/ch01/is-unique"></a>
+    <hr/>
     <a class="task-link" href="fibonacci"></a>
     <a class="task-link" href="binary-gap"></a>
     <a class="task-link" href="odd-occurrences-in-array"></a>
@@ -54,17 +56,17 @@
     (function (window) {
 
         var helper = {
-                valueElem : document.getElementById('task-value'),
-                loopsElem : document.getElementById('task-loops'),
+                valueElem: document.getElementById('task-value'),
+                loopsElem: document.getElementById('task-loops'),
                 resultElem: document.getElementById('task-result'),
-                codeElem  : document.getElementById('task-code'),
-                linkElems : document.querySelectorAll('.task-link'),
-                timers    : {
+                codeElem: document.getElementById('task-code'),
+                linkElems: document.querySelectorAll('.task-link'),
+                timers: {
                     'default': null
                 },
 
                 log: function (msg) {
-                    var line       = document.createElement('div');
+                    var line = document.createElement('div');
                     line.innerHTML = msg;
                     this.resultElem.appendChild(line);
                 },
@@ -87,9 +89,14 @@
                 },
 
                 getTestValue: function (defaultValue) {
-                    var value = this.valueElem.value;
+                    const value = this.valueElem.value;
 
-                    return (value !== '') ? JSON.parse(value) : (defaultValue || 0);
+                    try {
+                        return (value !== '') ? JSON.parse(value) : (defaultValue || 0);
+                    } catch (e) {
+                        return value;
+                    }
+
                 },
 
                 getTestLoopsCount: function () {
@@ -128,6 +135,7 @@
         // add new task
         var currentTaskScript,
             restartTimer;
+
         function addTaskScript(src) {
             if (currentTaskScript) {
                 currentTaskScript.parentNode.removeChild(currentTaskScript);
