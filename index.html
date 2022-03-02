@@ -24,9 +24,22 @@
             text-decoration: underline;
         }
 
-        #task-code {
+        #task-code,
+        #task-result {
             width: calc(100% - 250px);
+        }
+
+        #task-code {
             height: 50vh;
+        }
+
+        #task-result {
+            display: inline-block;
+        }
+
+        #task-result > * {
+            display: inline-block;
+            min-width: 200px;
         }
     </style>
 </head>
@@ -41,6 +54,10 @@
     <a class="task-link" href="cci/ch01/03check-on-permutation"></a>
     <a class="task-link" href="cci/ch01/02string-shift"></a>
     <a class="task-link" href="cci/ch01/01is-unique"></a>
+    <hr/>
+    <a class="task-link" href="interview/talking-carrying"></a>
+    <a class="task-link" href="interview/handmade-regexp"></a>
+    <a class="task-link" href="interview/stocks-buying"></a>
     <hr/>
     <a class="task-link" href="fibonacci"></a>
     <a class="task-link" href="binary-gap"></a>
@@ -72,10 +89,14 @@
                     'default': null
                 },
 
-                log: function (msg) {
-                    var line = document.createElement('div');
+                log: function (msg, lineBreak) {
+                    const line = document.createElement('div');
                     line.innerHTML = msg;
                     this.resultElem.appendChild(line);
+
+                    if(lineBreak){
+                        this.resultElem.appendChild(document.createElement('br'));
+                    }
                 },
 
                 time: function (timer) {
@@ -112,20 +133,17 @@
             },
 
             exportHelper = function (callback, title, repeatNo) {
-                var result;
-
-                helper.log('&nbsp;');
-
+                let result;
                 if (title) helper.log(title);
                 if (!repeatNo) repeatNo = helper.getTestLoopsCount();
 
                 helper.time();
-                for (var i = 0; i < repeatNo; i++) {
+                for (let i = 0; i < repeatNo; i++) {
                     result = callback();
                 }
                 helper.log('Execution time: ' + helper.timeEnd());
 
-                if (result) helper.log('Result: ' + result);
+                if (result) helper.log('Result: ' + result, true);
             };
 
         Object.freeze(helper);
