@@ -6,15 +6,24 @@ class Node {
 }
 
 class LinkedList {
-    get length(){
+    get length() {
         let result = 0;
         let node = this.head;
-        while (node){
+        while (node) {
             result++;
             node = node.next;
         }
         return result;
     }
+
+    get last() {
+        let node = this.head;
+        while (node.next) {
+            node = node.next;
+        }
+        return node;
+    }
+
     constructor(arr) {
         this.head = null;
 
