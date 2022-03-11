@@ -6,9 +6,17 @@ class Node {
 }
 
 class LinkedList {
+    get length(){
+        let result = 0;
+        let node = this.head;
+        while (node){
+            result++;
+            node = node.next;
+        }
+        return result;
+    }
     constructor(arr) {
-        this.head = null
-        this.length = 0;
+        this.head = null;
 
         if (arr && arr.length) {
             arr.forEach((item) => {
@@ -31,8 +39,6 @@ class LinkedList {
 
             current.next = node;
         }
-
-        this.length++;
     }
 
     toArray() {
