@@ -1,4 +1,4 @@
-class Node {
+class LinkedListNode {
     constructor(value) {
         this.value = value;
         this.next = null;
@@ -35,7 +35,7 @@ class LinkedList {
     }
 
     add(value) {
-        const node = new Node(value);
+        const node = new LinkedListNode(value);
 
         if (this.length === 0) {
             this.head = node;
